@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar perfil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('css/account.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row user-menu-container square">
+            <div class="col-md-12 user-details">
+                <div class="row spacepurplebg white">
+                    <div class="col-md-2 no-pad">
+                        <div class="user-image">
+                            <img src="{{ app.user.avatarUrl }}" class="img-responsive thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-md-10 no-pad">
+                        <div class="user-pad">
+                            <h3>Bienvenid@ de nuevo, {{ app.user.firstName }}</h3>
+                            {% if app.user.twitterUsername %}
+                                <h4 class="white"><i class="fa fa-twitter"></i> {{ app.user.twitterUsername }}</h4>
+                            {% endif %}
+                            <a class="btn btn-labeled btn-info" href="#">
+                                <span class="btn-label"><i class="fa fa-pencil"></i></span>Actualizar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <section>
+                    <h2> Datos del Cliente:</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label><strong>Apellidos: </strong></label>
+                            <span>{{ client.lastname }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label><strong>Nombre: </strong></label>
+                            <span>{{ client.firstName }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label><strong>Ciudad: </strong></label>
+                            <span>{{ client.city }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label><strong>Código postal: </strong></label>
+                            <span>{{ client.postalCode }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label><strong>Municipio: </strong></label>
+                            <span>{{ client.township }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label><strong>Email: </strong></label>
+                            <span>{{ client.email }}</span>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h2> Tus cuentas:</h2>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><strong>Num cuenta: </strong></label>
+                            <span>12834ybn2343</span>
+                            <p>Asociados: Manolo</p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h2> Operaciones:</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <label><strong>Editar perfil </strong></label>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary">Editar</button>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <label><strong>Editar Cuentas </strong></label>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-secondary">Gestionar</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <label><strong>Dar de baja </strong></label>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-danger">Eliminar cliente</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}
