@@ -13,8 +13,8 @@ class AccountFixture extends BaseFixture
     {
         $this->createMany(10, 'account', function() {
             $account = new Account();
-            $account->setNumber($this->faker->bankAccountNumber);
-            $account->setCreatedDate($this->faker->dateTimeThisDecade());
+            $account->setNumber($this->faker->bankAccountNumber . 'abc');
+            $account->setCreated($this->faker->dateTimeThisDecade());
             $account->setModified($this->faker->dateTimeThisMonth());
             $account->setMoney($this->faker->randomFloat());
             $account->setStatus(self::ACTIVE_STATUS);
