@@ -8,7 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class AccountFixture extends BaseFixture implements DependentFixtureInterface
 {
-    const ACTIVE_STATUS = 1;
 
     protected function loadData(ObjectManager $manager)
     {
@@ -18,7 +17,7 @@ class AccountFixture extends BaseFixture implements DependentFixtureInterface
             $account->setCreated($this->faker->dateTimeThisDecade());
             $account->setModified($this->faker->dateTimeThisMonth());
             $account->setMoney($this->faker->randomFloat());
-            $account->setStatus(self::ACTIVE_STATUS);
+            $account->setStatus(Account::ACTIVE_STATUS);
 
             $user = $this->getRandomReference('main_users');
             $account->setOwnerId($user);

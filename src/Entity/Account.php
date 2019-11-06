@@ -42,6 +42,16 @@ class Account
     private $money;
 
     /**
+     * const integer ACTIVE_STATUS Estado activo cuenta
+     */
+    const ACTIVE_STATUS = 1;
+
+    /**
+     * const integer INACTIVE_STATUS Estado de una cuenta dada de baja.
+     */
+    const INACTIVE_STATUS = 0;
+
+    /**
      * @var \User
      *
      * @ORM\ManyToOne(targetEntity="User")
