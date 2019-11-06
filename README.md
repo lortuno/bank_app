@@ -1,5 +1,6 @@
 # bank_app
-Este proyecto pretende demostrar mediante código limpio y el uso de symfony y composer, cómo gestionar una sencilla app bancaria, para aprendizaje personal.
+Este proyecto pretende demostrar mediante código limpio y el uso de symfony y composer, cómo gestionar una sencilla app
+ bancaria, para aprendizaje personal.
 ## Objetivo 
 Desarrollar una pequeña aplicación web que permita:
 * Dar de alta a usuarios: Nombre, apellido, email, dirección, municipio, ciudad y CP.
