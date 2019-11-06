@@ -50,11 +50,6 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("main")
-     */
-    private $twitterUsername;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ApiToken", mappedBy="user", orphanRemoval=true)
@@ -62,9 +57,9 @@ class User implements UserInterface
     private $apiTokens;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="author", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="App\Entity\Account", mappedBy="author", fetch="EXTRA_LAZY")
      */
-    private $articles;
+    private $accounts;
 
     /**
      * @ORM\Column(type="datetime")
@@ -99,7 +94,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
-        $this->articles = new ArrayCollection();
+        //$this->accounts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,18 +187,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTwitterUsername(): ?string
-    {
-        return $this->twitterUsername;
-    }
-
-    public function setTwitterUsername(?string $twitterUsername): self
-    {
-        $this->twitterUsername = $twitterUsername;
-
-        return $this;
-    }
-
     public function getAvatarUrl(int $size = null): string
     {
         $url = 'https://robohash.org/'.$this->getEmail();
@@ -240,37 +223,6 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($apiToken->getUser() === $this) {
                 $apiToken->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Article[]
-     */
-    public function getArticles(): Collection
-    {
-        return $this->articles;
-    }
-
-    public function addArticle(Article $article): self
-    {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(Article $article): self
-    {
-        if ($this->articles->contains($article)) {
-            $this->articles->removeElement($article);
-            // set the owning side to null (unless already changed)
-            if ($article->getAuthor() === $this) {
-                $article->setAuthor(null);
             }
         }
 
@@ -348,6 +300,44 @@ class User implements UserInterface
     public function setTownship(?string $township): self
     {
         $this->township = $township;
+
+        return $this;
+    }
+
+    public function setAgreedTermsAt(\DateTimeInterface $agreedTermsAt): self
+    {
+        $this->agreedTermsAt = $agreedTermsAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Account[]
+     */
+    public function getAccounts(): Collection
+    {
+        return $this->accounts;
+    }
+
+    public function addAccount(Account $account): self
+    {
+        if (!$this->accounts->contains($account)) {
+            $this->accounts[] = $account;
+            $account->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccount(Account $account): self
+    {
+        if ($this->accounts->contains($account)) {
+            $this->accounts->removeElement($account);
+            // set the owning side to null (unless already changed)
+            if ($account->getAuthor() === $this) {
+                $account->setAuthor(null);
+            }
+        }
 
         return $this;
     }

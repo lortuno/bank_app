@@ -25,11 +25,9 @@ class UserFixture extends BaseFixture
             $user->setLastname($this->faker->lastName);
             $user->setPostalCode($this->faker->postcode);
             $user->setCity($this->faker->city);
+            $user->setAddress($this->faker->address);
+            $user->setTownship($this->faker->country);
             $user->agreeToTerms();
-
-            if ($this->faker->boolean) {
-                $user->setTwitterUsername($this->faker->userName);
-            }
 
             $user->setPassword($this->passwordEncoder->encodePassword(
                 $user,

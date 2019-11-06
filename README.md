@@ -37,7 +37,7 @@ O, según la versión de composer el comando podría ser:  `php composer.phar in
 
 **Configurar el fichero de entorno  .env**
 
-Hay que tener un `.env` , si  no exist el fichero duplicar el `.env.dist` y cambiarle el nombre.
+Hay que tener un `.env` , si  no existe el fichero duplicar el `.env.dist` y cambiarle el nombre.
 Posteriormente reajustar parámetros, especialmente en los referente a base de datos.  `DATABASE_URL`.
 
 **Inicializar la Database**
@@ -46,5 +46,6 @@ Ejecutar los siguientes comandos. Los fixtures introducen data en la BD.
 
 ```
 php bin/console doctrine:database:create
+php bin/console doctrine:migrations:diff 
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load

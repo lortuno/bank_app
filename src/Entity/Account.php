@@ -24,7 +24,7 @@ class Account
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_date;
+    private $created;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -40,6 +40,16 @@ class Account
      * @ORM\Column(type="float")
      */
     private $money;
+
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
+     * })
+     */
+    private $owner_id;
 
     public function getId(): ?int
     {
@@ -60,12 +70,12 @@ class Account
 
     public function getCreated(): ?\DateTimeInterface
     {
-        return $this->created_date;
+        return $this->created;
     }
 
-    public function setCreated(\DateTimeInterface $created_date): self
+    public function setCreated(\DateTimeInterface $created): self
     {
-        $this->created_date = $created_date;
+        $this->created = $created;
 
         return $this;
     }
@@ -104,5 +114,21 @@ class Account
         $this->money = $money;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerId()
+    {
+        return $this->owner_id;
+    }
+
+    /**
+     * @param mixed $owner_id
+     */
+    public function setOwnerId($owner_id): void
+    {
+        $this->owner_id = $owner_id;
     }
 }
