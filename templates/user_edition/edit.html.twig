@@ -1,0 +1,14 @@
+{% extends 'content_base.html.twig' %}
+
+{% block content_body %}
+    <h1>Edita Tu perfil</h1>
+
+    {{ include('user_edition/_form.html.twig', {
+
+    }) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}

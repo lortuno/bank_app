@@ -19,9 +19,11 @@ class AccountFixture extends BaseFixture implements DependentFixtureInterface
             $account->setMoney($this->faker->randomFloat());
             $account->setStatus(Account::ACTIVE_STATUS);
 
-            $user = $this->getRandomReference('main_users');
-            $account->setOwnerId($user);
+            $users = $this->getRandomReferences('main_users', 3);
 
+            foreach ($users as $user) {
+                $account->addUser($user);
+            }
 
             return $account;
         });

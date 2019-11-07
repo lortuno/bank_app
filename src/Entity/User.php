@@ -57,11 +57,6 @@ class User implements UserInterface
     private $apiTokens;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Account", mappedBy="author", fetch="EXTRA_LAZY")
-     */
-    private $accounts;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $agreedTermsAt;
@@ -91,10 +86,15 @@ class User implements UserInterface
      */
     private $township;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Account", inversedBy="users")
+     */
+    private $accounts;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
-        //$this->accounts = new ArrayCollection();
+        $this->accounts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -323,7 +323,6 @@ class User implements UserInterface
     {
         if (!$this->accounts->contains($account)) {
             $this->accounts[] = $account;
-            $account->setAuthor($this);
         }
 
         return $this;
@@ -333,10 +332,6 @@ class User implements UserInterface
     {
         if ($this->accounts->contains($account)) {
             $this->accounts->removeElement($account);
-            // set the owning side to null (unless already changed)
-            if ($account->getAuthor() === $this) {
-                $account->setAuthor(null);
-            }
         }
 
         return $this;

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -52,14 +54,14 @@ class Account
     const INACTIVE_STATUS = 0;
 
     /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
-     * })
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="accounts")
      */
-    private $owner_id;
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -127,18 +129,30 @@ class Account
     }
 
     /**
-     * @return mixed
+     * @return Collection|User[]
      */
-    public function getOwnerId()
+    public function getUsers(): Collection
     {
-        return $this->owner_id;
+        return $this->users;
     }
 
-    /**
-     * @param mixed $owner_id
-     */
-    public function setOwnerId($owner_id): void
+    public function addUser(User $user): self
     {
-        $this->owner_id = $owner_id;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            $user->removeAccount($this);
+        }
+
+        return $this;
     }
 }

@@ -61,11 +61,13 @@
                 <section>
                     <h2> Tus cuentas:</h2>
                     <div class="row">
+                        {% for account in client.accounts %}
                         <div class="col-md-12">
                             <label><strong>Num cuenta: </strong></label>
-                            <span>12834ybn2343</span>
+                            <span>{{ account.number }}</span>
                             <p>Asociados: Manolo</p>
                         </div>
+                        {% endfor %}
                     </div>
                 </section>
                 <section>
@@ -76,7 +78,7 @@
                                 <label><strong>Editar perfil </strong></label>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-primary">Editar</button>
+                                <a href="{{ path('user_edit', {'id': client.id } ) }}" class="btn btn-primary">Editar</a>
                             </div>
 
                         </div>

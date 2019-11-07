@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\ApiToken;
 use App\Entity\User;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
