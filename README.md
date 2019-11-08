@@ -5,7 +5,7 @@ Este proyecto pretende demostrar mediante código limpio y el uso de symfony y c
 Desarrollar una pequeña aplicación web que permita:
 * Dar de alta a usuarios: Nombre, apellido, email, dirección, municipio, ciudad y CP.
 * Login de los usuarios.
-* Edición el perfil de los usuarios.
+* Edición del perfil de los usuarios.
 * Dar de baja a los usuarios, almacenando en un histórico dichas bajas sin datos sensibles (quién y cuándo)
 * Crear cuentas bancarias y relacionarlas con los usuarios.
 * Un usuario puede tener varias cuentas y varios usuarios pueden estar relacionados

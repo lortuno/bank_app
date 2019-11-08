@@ -4,7 +4,10 @@
 namespace App\Service;
 
 
+use App\Entity\Account;
+use App\Entity\User;
 use App\Entity\UserDeleted;
+use App\Entity\AccountHistory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -34,4 +37,5 @@ class AccountHelper
             throw new NotFoundHttpException('Error during User Delete creation');
         }
     }
+
 }

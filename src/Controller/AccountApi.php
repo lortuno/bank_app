@@ -14,11 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @IsGranted("ROLE_USER")
- */
+
 class AccountApi extends BaseController
 {
+    /**
+     * const integer DEFAULT_STATUS_CODE_ERROR Status http por defecto cuando hay error.
+     */
+    const DEFAULT_STATUS_CODE_ERROR = 404;
     /**
      * @Route("/api/account", name="api_account")
      */
@@ -36,24 +38,15 @@ class AccountApi extends BaseController
      */
     public function changeAccountMoneyApi(Request $request, EntityManagerInterface $em)
     {
-        $userId = $request->request->get('user_id');
-        $accountId = $request->request->get('account_id');
-        $moneyQuantity = $request->request->get('money');
-
-        $accountRepository = $em->getRepository(Account::class);
-        $account = $accountRepository->find($accountId);
-
-        if (!$account) {
-            throw new NotFoundHttpException('ACCOUNT_NOT_FOUND');
-        }
-
         try {
-            $account->setStatus(Account::INACTIVE_STATUS);
-            $em->flush();
+            $accountRepository = $em->getRepository(Account::class);
+            $bankAccount = $accountRepository->find($request->request->get('account_id'));
+            $bankAccount->saveAccountMovement($request, $em);
 
-            return new JsonResponse('ACCOUNT_DELETED', 200);
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException('Error on delete');
+            return new JsonResponse('MOVEMENT_SUCCESS', 201);
+        } catch(\Exception $e) {
+            $code = ($e->getCode() > 0) ? $e->getCode() : self::DEFAULT_STATUS_CODE_ERROR;
+            return new JsonResponse($e->getMessage(), $code );
         }
     }
 
@@ -97,6 +90,7 @@ class AccountApi extends BaseController
 
         try {
             AccountHelper::insertUserDeleted($user, $request, $em);
+
             $em->remove($user);
             $em->flush();
 
