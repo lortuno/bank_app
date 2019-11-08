@@ -224,7 +224,9 @@ class Account
 
     private function getBankMoneyResult($operationData)
     {
-        switch ($operationData['operationType']) {
+        $operationType = strtolower($operationData['operationType']);
+
+        switch ($operationType) {
             case 'take':
                 $this->withdraw($operationData['moneyQuantity']);
                 break;
@@ -232,7 +234,7 @@ class Account
                 $this->deposit($operationData['moneyQuantity']);
                 break;
             default:
-                throw new NotFoundHttpException('Operation type not allowed ', null, 404);
+                throw new NotFoundHttpException('Operation type not allowed: '. $operationType, null, 404);
                 break;
         }
 
@@ -259,7 +261,7 @@ class Account
             }
         }
 
-        throw new NotFoundHttpException('User ' . $opData['userId'] . ' does not own account', null, 403);
+        throw new NotFoundHttpException('User ' . $userId . ' does not own account', null, 403);
     }
 
     private function checkMoneyQuantityAllowed($moneyQuantity)
