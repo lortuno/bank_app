@@ -57,11 +57,6 @@ class Account
     const INACTIVE_STATUS = 0;
 
     /**
-     * const integer MAX_MONEY_OPERATION Máximo de dinero que se puede operar desde la app.
-     */
-    const MAX_MONEY_OPERATION = 2000;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="accounts")
      */
     private $users;
@@ -162,114 +157,5 @@ class Account
         }
 
         return $this;
-    }
-
-    public function saveAccountMovement(Request $request, EntityManagerInterface $em)
-    {
-        $operationData = array(
-            'userId' => $request->request->get('user_id'),
-            'moneyQuantity' => $request->request->get('money'),
-            'operationType' => $request->request->get('operation_type'),
-        );
-
-        $this->checkUserOperationIsAllowed($operationData);
-        $accountHistory = $this->getAccountHistoryData($operationData);
-
-        try {
-            $em->persist($accountHistory);
-            $em->persist($this);
-            $em->flush();
-
-            return true;
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException('Error during Saving movement ' . $e->getMessage(), null, 500);
-        }
-    }
-
-    private function withdraw(int $amount): void
-    {
-        if ($amount > $this->money) {
-            throw new NotFoundHttpException('User does not have enough money. User has €'. $this->money, null, 403);
-        }
-
-        $this->money -= $amount;
-    }
-
-    private function deposit(int $amount): void
-    {
-        $this->money += $amount;
-    }
-
-    private function checkUserOperationIsAllowed($operationData)
-    {
-        $this->checkAccountExists();
-        $this->checkUserOwnsAccount($operationData['userId']);
-        $this->checkMoneyQuantityAllowed($operationData['moneyQuantity']);
-
-        return true;
-    }
-
-    private function getAccountHistoryData($operationData)
-    {
-        $now = new \DateTime();
-        $accountHistory = new AccountHistory();
-        $accountHistory->setAccountId($this->getId());
-        $accountHistory->setUserId($operationData['userId']);
-        $accountHistory->setBeforeMoney($this->getMoney());
-        $accountHistory->setAfterMoney($this->getBankMoneyResult($operationData));
-        $accountHistory->setDate($now);
-
-        return $accountHistory;
-    }
-
-    private function getBankMoneyResult($operationData)
-    {
-        $operationType = strtolower($operationData['operationType']);
-
-        switch ($operationType) {
-            case 'take':
-                $this->withdraw($operationData['moneyQuantity']);
-                break;
-            case 'give':
-                $this->deposit($operationData['moneyQuantity']);
-                break;
-            default:
-                throw new NotFoundHttpException('Operation type not allowed: '. $operationType, null, 404);
-                break;
-        }
-
-        return $this->getMoney();
-    }
-
-
-    private function checkAccountExists()
-    {
-        if (!$this->getId()) {
-            throw new NotFoundHttpException('Account does not exist ', null, 404);
-        }
-
-        return true;
-    }
-
-    private function checkUserOwnsAccount($userId)
-    {
-        if ($users = $this->getUsers()) {
-            foreach ($users as $user) {
-                if ($user->getId() == $userId) {
-                    return  true;
-                }
-            }
-        }
-
-        throw new NotFoundHttpException('User ' . $userId . ' does not own account', null, 403);
-    }
-
-    private function checkMoneyQuantityAllowed($moneyQuantity)
-    {
-        if ($moneyQuantity > self::MAX_MONEY_OPERATION) {
-            throw new NotFoundHttpException('User cannot make this op through the app', null, 403);
-        }
-
-        return true;
     }
 }

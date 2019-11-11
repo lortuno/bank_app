@@ -6,6 +6,7 @@ use App\Entity\Account;
 use App\Entity\User;
 use App\Entity\UserDeleted;
 use App\Service\AccountHelper;
+use App\Service\AccountMovement;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,6 +22,7 @@ class AccountApi extends BaseController
      * const integer DEFAULT_STATUS_CODE_ERROR Status http por defecto cuando hay error.
      */
     const DEFAULT_STATUS_CODE_ERROR = 404;
+
     /**
      * @Route("/api/account", name="api_account")
      */
@@ -39,11 +41,10 @@ class AccountApi extends BaseController
     public function changeAccountMoneyApi(Request $request, EntityManagerInterface $em)
     {
         try {
-            $accountRepository = $em->getRepository(Account::class);
-            $bankAccount = $accountRepository->find($request->request->get('account_id'));
-            $bankAccount->saveAccountMovement($request, $em);
+            $accountOperator = new AccountMovement($request, $em);
+            $accountOperator->changeAccountMoney();
 
-            return new JsonResponse('MOVEMENT_SUCCESS', 201);
+            return new JsonResponse('MOVEMENT_SUCCESSFUL', 201);
         } catch(\Exception $e) {
             $code = ($e->getCode() > 0) ? $e->getCode() : self::DEFAULT_STATUS_CODE_ERROR;
             return new JsonResponse($e->getMessage(), $code );
