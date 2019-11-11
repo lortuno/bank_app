@@ -189,7 +189,7 @@ class Account
     private function withdraw(int $amount): void
     {
         if ($amount > $this->money) {
-            throw new NotFoundHttpException('User does not have enough money', null, 403);
+            throw new NotFoundHttpException('User does not have enough money. User has €'. $this->money, null, 403);
         }
 
         $this->money -= $amount;

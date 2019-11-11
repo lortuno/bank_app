@@ -18,12 +18,12 @@ movimientos.
 ## Especificaciones:
 * Todas estas acciones se harán usando servicios
 * Las respuestas deben serializarse en formato JSON.
-* El número de cuenta es alfanumérico.
+* El número de cuenta es alfanumérico. 
 * No se podrá sacar dinero si no dispone de la cantidad requerida y el mensaje tendrá
 que ser personalizable con el dinero que dispone.
-* Si el ingreso es mayor de 2000€, la app dirá que no es una operación válida para realizar desde la
+* Si la operación es mayor de 2000€, la app dirá que no es una operación válida para realizar desde la
 aplicación.
-* Realización de pruebas para la comprobación que funciona correctamente
+* Realización de pruebas para la comprobación que funciona correctamente.
 
 ## Configuración del proyecto
 **Descargar dependencias de composer**

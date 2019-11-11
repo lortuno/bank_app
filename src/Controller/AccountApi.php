@@ -100,5 +100,41 @@ class AccountApi extends BaseController
         }
     }
 
+    /**
+     * @Route("/api/account/remove_user", name="api_user_account_remove")
+     */
+    public function removeAccountUserAccessApi(Request $request, EntityManagerInterface $em)
+    {
+        $accountId = $request->request->get('account_id');
+        $userId = $request->request->get('user_id');
+
+        if ($userId && $accountId) {
+            $accountRepository = $em->getRepository(Account::class);
+            $account = $accountRepository->find($accountId);
+
+
+            if (!$account) {
+                throw new NotFoundHttpException('ACCOUNT_NOT_FOUND');
+            }
+
+            $userRepository = $em->getRepository(User::class);
+            $user = $userRepository->find($userId);
+
+            if (!$user) {
+                throw new NotFoundHttpException('USER_NOT_FOUND');
+            }
+        }
+
+
+        try {
+            $account->removeUser($user);
+            $em->flush();
+
+            return new JsonResponse('USER_ACCOUNT_DELETED', 200);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException('Error on delete');
+        }
+    }
+
 
 }
