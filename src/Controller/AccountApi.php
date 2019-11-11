@@ -6,6 +6,7 @@ use App\Entity\Account;
 use App\Entity\User;
 use App\Entity\UserDeleted;
 use App\Service\AccountHelper;
+use App\Service\AccountManagement;
 use App\Service\AccountMovement;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -18,11 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccountApi extends BaseController
 {
-    /**
-     * const integer DEFAULT_STATUS_CODE_ERROR Status http por defecto cuando hay error.
-     */
-    const DEFAULT_STATUS_CODE_ERROR = 404;
-
     /**
      * @Route("/api/account", name="api_account")
      */
@@ -42,12 +38,11 @@ class AccountApi extends BaseController
     {
         try {
             $accountOperator = new AccountMovement($request, $em);
-            $accountOperator->changeAccountMoney();
+            $accountOperator->saveAccountMovement();
 
             return new JsonResponse('MOVEMENT_SUCCESSFUL', 201);
-        } catch(\Exception $e) {
-            $code = ($e->getCode() > 0) ? $e->getCode() : self::DEFAULT_STATUS_CODE_ERROR;
-            return new JsonResponse($e->getMessage(), $code );
+        } catch (\Exception $e) {
+            return AccountHelper::getJsonErrorResponse($e);
         }
     }
 
@@ -56,22 +51,13 @@ class AccountApi extends BaseController
      */
     public function removeAccountApi(Request $request, EntityManagerInterface $em)
     {
-        $id = $request->get('id');
-
-        $accountRepository = $em->getRepository(Account::class);
-        $account = $accountRepository->find($id);
-
-        if (!$account) {
-            throw new NotFoundHttpException('ACCOUNT_NOT_FOUND');
-        }
-
         try {
-           $account->setStatus(Account::INACTIVE_STATUS);
-           $em->flush();
+            $account = new AccountManagement($request, $em);
+            $account->removeAccount();
 
-           return new JsonResponse('ACCOUNT_DELETED', 200);
+            return new JsonResponse('ACCOUNT_DELETED', 200);
         } catch (\Exception $e) {
-            throw new NotFoundHttpException('Error on delete');
+            return AccountHelper::getJsonErrorResponse($e);
         }
     }
 
@@ -106,34 +92,13 @@ class AccountApi extends BaseController
      */
     public function removeAccountUserAccessApi(Request $request, EntityManagerInterface $em)
     {
-        $accountId = $request->request->get('account_id');
-        $userId = $request->request->get('user_id');
-
-        if ($userId && $accountId) {
-            $accountRepository = $em->getRepository(Account::class);
-            $account = $accountRepository->find($accountId);
-
-
-            if (!$account) {
-                throw new NotFoundHttpException('ACCOUNT_NOT_FOUND');
-            }
-
-            $userRepository = $em->getRepository(User::class);
-            $user = $userRepository->find($userId);
-
-            if (!$user) {
-                throw new NotFoundHttpException('USER_NOT_FOUND');
-            }
-        }
-
-
         try {
-            $account->removeUser($user);
-            $em->flush();
+            $account = new AccountManagement($request, $em);
+            $account->removeUserAccessToAccount();
 
             return new JsonResponse('USER_ACCOUNT_DELETED', 200);
         } catch (\Exception $e) {
-            throw new NotFoundHttpException('Error on delete');
+            return AccountHelper::getJsonErrorResponse($e);
         }
     }
 

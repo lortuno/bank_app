@@ -101,30 +101,14 @@ class AccountMovement
 
         $this->em = $em;
         $this->setRequest($request);
-    }
-
-    /**
-     * @param Request $request
-     * @return bool
-     * @throws \Exception
-     */
-    public function changeAccountMoney()
-    {
         $this->setOperationProperties();
-        $this->saveAccountMovement();
-    }
-
-    private function setOperationProperties()
-    {
-        $this->setUserId($this->request->request->get('user_id'));
-        $this->setOperationType($this->request->request->get('operation_type'));
-        $this->setMoneyQuantity($this->request->request->get('money'));
     }
 
     /**
+     * Guarda el movimiento en la cuenta y en el histórico de movimientos.
      * @throws \Exception
      */
-    private function saveAccountMovement()
+    public function saveAccountMovement()
     {
         $this->checkUserOperationIsAllowed();
         $accountHistory = $this->getAccountHistoryData();
@@ -136,6 +120,13 @@ class AccountMovement
         } catch (\Exception $e) {
             throw new \Exception('Error during Saving movement ' . $e->getMessage(), 500);
         }
+    }
+
+    private function setOperationProperties()
+    {
+        $this->setUserId($this->request->request->get('user_id'));
+        $this->setOperationType($this->request->request->get('operation_type'));
+        $this->setMoneyQuantity($this->request->request->get('money'));
     }
 
     /**
