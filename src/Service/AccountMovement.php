@@ -2,17 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\Account;
 use App\Entity\AccountHistory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class AccountMovement
+class AccountMovement extends AccountManagement
 {
-    protected $em;
-    protected $request;
-    private $account;
-    private $userId;
     private $moneyQuantity;
     private $operationType;
 
@@ -20,38 +15,6 @@ class AccountMovement
      * const integer MAX_MONEY_OPERATION Máximo de dinero que se puede operar desde la app.
      */
     const MAX_MONEY_OPERATION = 2000;
-
-    /**
-     * @return mixed
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param mixed $request
-     */
-    public function setRequest($request): void
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return mixed
-     */
-    private function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param mixed $userId
-     */
-    private function setUserId($userId): void
-    {
-        $this->userId = $userId;
-    }
 
     /**
      * @return mixed
@@ -93,14 +56,7 @@ class AccountMovement
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {
-        $accountRepository = $em->getRepository(Account::class);
-        $bankAccount = $accountRepository->find($request->request->get('account_id'));
-        $this->account = $bankAccount;
-
-        $this->checkAccountExists();
-
-        $this->em = $em;
-        $this->setRequest($request);
+        parent::__construct($request, $em);
         $this->setOperationProperties();
     }
 
@@ -115,7 +71,7 @@ class AccountMovement
 
         try {
             $this->em->persist($accountHistory);
-            $this->em->persist($this->account);
+            $this->em->persist($this->getAccount());
             $this->em->flush();
         } catch (\Exception $e) {
             throw new \Exception('Error during Saving movement ' . $e->getMessage(), 500);
@@ -135,12 +91,12 @@ class AccountMovement
      */
     private function withdraw(int $amount): void
     {
-        if ($amount > $this->account->getMoney()) {
-            throw new \Exception('User does not have enough money. User has €' . $this->account->getMoney(), 403);
+        if ($amount > $this->getAccount()->getMoney()) {
+            throw new \Exception('User does not have enough money. User has €' . $this->getAccount()->getMoney(), 403);
         }
 
-        $total = $this->account->getMoney() - $amount;
-        $this->account->setMoney($total);
+        $total = $this->getAccount()->getMoney() - $amount;
+        $this->getAccount()->setMoney($total);
     }
 
     /**
@@ -148,8 +104,8 @@ class AccountMovement
      */
     private function deposit(int $amount): void
     {
-        $total = $this->account->getMoney() + $amount;
-        $this->account->setMoney($total);
+        $total = $this->getAccount()->getMoney() + $amount;
+        $this->getAccount()->setMoney($total);
     }
 
     /**
@@ -169,9 +125,9 @@ class AccountMovement
     {
         $now = new \DateTime();
         $accountHistory = new AccountHistory();
-        $accountHistory->setAccountId($this->account->getId());
+        $accountHistory->setAccountId($this->getAccount()->getId());
         $accountHistory->setUserId($this->getUserId());
-        $accountHistory->setBeforeMoney($this->account->getMoney());
+        $accountHistory->setBeforeMoney($this->getAccount()->getMoney());
         $accountHistory->setAfterMoney($this->getBankMoneyResult());
         $accountHistory->setDate($now);
 
@@ -198,21 +154,7 @@ class AccountMovement
                 break;
         }
 
-        return $this->account->getMoney();
-    }
-
-
-    /**
-     * @return bool
-     * @throws \Exception
-     */
-    private function checkAccountExists()
-    {
-        if (!$this->account) {
-            throw new \Exception('Account requested does not exist', 404);
-        }
-
-        return true;
+        return $this->getAccount()->getMoney();
     }
 
     /**
@@ -223,7 +165,7 @@ class AccountMovement
     {
         $userId = $this->getUserId();
 
-        if ($users = $this->account->getUsers()) {
+        if ($users = $this->getAccount()->getUsers()) {
             foreach ($users as $user) {
                 if ($user->getId() == $userId) {
                     return true;

@@ -30,24 +30,8 @@ class AccountManagement
         $this->setAccount($account);
         $this->checkAccountExists();
         $this->em = $em;
-        $this->setRequest($request);
-        $this->setOperationProperties();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param mixed $request
-     */
-    public function setRequest($request): void
-    {
         $this->request = $request;
+        $this->setOperationProperties();
     }
 
     /**
@@ -69,7 +53,7 @@ class AccountManagement
     /**
      * @return mixed
      */
-    private function getUserId()
+    protected function getUserId()
     {
         return $this->userId;
     }
@@ -77,7 +61,7 @@ class AccountManagement
     /**
      * @param mixed $userId
      */
-    private function setUserId($userId): void
+    protected function setUserId($userId): void
     {
         $this->userId = $userId;
     }
@@ -136,10 +120,10 @@ class AccountManagement
      * @param $user
      * @throws \Exception
      */
-    private function checkUserExists($user)
+    protected function checkUserExists($user)
     {
         if (!$user) {
-            throw new \Exception('USER_NOT_FOUND');
+            throw new \Exception('USER_NOT_FOUND', 404);
         }
     }
 

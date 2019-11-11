@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserFormType;
+use App\Service\UserManagement;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -52,20 +54,23 @@ class AccountController extends BaseController
     }
 
     /**
-     * @Route("/user/{id}/remove", name="user_remove")
+     * @Route("/user/{user_id}/remove", name="user_remove")
      */
     public function removeUser(Request $request, EntityManagerInterface $em)
     {
-        if (AccountApi::removeUserApi($request, $em)) {
-            $this->addFlash('success', 'Usuario borrado con éxito');
+        try {
+            $user = new UserManagement($request, $em);
+            $user->removeUser();
+            $this->get('security.context')->setToken(null);
             $session = $request->getSession();
             $session->invalidate();
+            $this->addFlash('success', 'Usuario borrado con éxito');
 
             return $this->render('security/login.html.twig', [
                 'last_username' => '',
                 'error'         => '',
             ]);
-        } else {
+        } catch (\Exception $e) {
             $this->addFlash('error', 'Error: no se pudo borrar el Usuario');
         }
     }
