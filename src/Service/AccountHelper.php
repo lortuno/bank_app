@@ -5,7 +5,6 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
 class AccountHelper
 {
     /**
@@ -21,7 +20,6 @@ class AccountHelper
     {
         $code = ($e->getCode() > 0) ? $e->getCode() : self::DEFAULT_STATUS_CODE_ERROR;
 
-        return new JsonResponse($e->getMessage(), $code );
+        return new JsonResponse($e->getMessage(), $code);
     }
-
 }

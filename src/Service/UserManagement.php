@@ -3,7 +3,6 @@
 
 namespace App\Service;
 
-
 use App\Entity\User;
 use App\Entity\UserDeleted;
 use Doctrine\ORM\EntityManagerInterface;

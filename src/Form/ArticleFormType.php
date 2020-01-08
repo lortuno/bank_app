@@ -76,7 +76,7 @@ class ArticleFormType extends AbstractType
 
         $builder->get('location')->addEventListener(
             FormEvents::POST_SUBMIT,
-            function(FormEvent $event) {
+            function (FormEvent $event) {
                 $form = $event->getForm();
                 $this->setupSpecificLocationNameField(
                     $form->getParent(),

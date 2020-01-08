@@ -33,5 +33,5 @@ final class Version20190616103932 extends AbstractMigration
 
         $this->addSql('DROP TABLE account');
         $this->addSql('DROP TABLE account_history');
-      }
+    }
 }

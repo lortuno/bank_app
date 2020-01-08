@@ -31,5 +31,5 @@ final class Version20190616100834 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('DROP TABLE user_deleted');
-     }
+    }
 }

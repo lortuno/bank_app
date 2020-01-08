@@ -126,6 +126,4 @@ class AccountManagement
             throw new \Exception('USER_NOT_FOUND', 404);
         }
     }
-
-
 }
