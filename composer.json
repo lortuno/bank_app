@@ -27,6 +27,10 @@
         "twig/extensions": "^1.5"
     },
     "require-dev": {
+        "behat/mink": "1.7.x-dev",
+        "behat/mink-extension": "^2.0",
+        "behat/mink-goutte-driver": "^1.1",
+        "behat/mink-selenium2-driver": "^1.2",
         "behat/symfony2-extension": "^2.1",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "easycorp/easy-log-handler": "^1.0.2",
