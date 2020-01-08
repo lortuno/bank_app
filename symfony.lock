@@ -1,9 +1,34 @@
 {
+    "behat/behat": {
+        "version": "v3.5.0"
+    },
+    "behat/gherkin": {
+        "version": "v4.6.0"
+    },
+    "behat/symfony2-extension": {
+        "version": "2.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.1",
+            "ref": "158be9d4b4c2127d9ec741c97e3cb1b6610b5294"
+        },
+        "files": [
+            "behat.yml.dist",
+            "config/bootstrap.php",
+            "features/bootstrap/FeatureContext.php",
+            "features/bootstrap/bootstrap.php",
+            "features/demo.feature"
+        ]
+    },
     "behat/transliterator": {
         "version": "v1.2.0"
     },
     "clue/stream-filter": {
         "version": "v1.4.0"
+    },
+    "container-interop/container-interop": {
+        "version": "1.2.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -37,9 +62,6 @@
             "version": "1.6",
             "ref": "c745b67e4dec2771d4d57a60efd224faf445c929"
         }
-    },
-    "doctrine/doctrine-cache-bundle": {
-        "version": "1.3.3"
     },
     "doctrine/doctrine-fixtures-bundle": {
         "version": "3.0",
@@ -140,8 +162,8 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
-    "php-http/cache-plugin": {
-        "version": "v1.5.0"
+    "php": {
+        "version": "7.2"
     },
     "php-http/client-common": {
         "version": "1.7.0"
@@ -230,11 +252,17 @@
     "symfony/asset": {
         "version": "v4.0.3"
     },
+    "symfony/browser-kit": {
+        "version": "v4.4.0"
+    },
     "symfony/cache": {
         "version": "v4.0.2"
     },
     "symfony/cache-contracts": {
         "version": "v1.1.7"
+    },
+    "symfony/class-loader": {
+        "version": "v3.4.36"
     },
     "symfony/config": {
         "version": "v4.0.2"
@@ -247,6 +275,9 @@
             "version": "3.3",
             "ref": "9f94d3ea453cd8a3b95db7f82592d7344fe3a76a"
         }
+    },
+    "symfony/css-selector": {
+        "version": "v4.4.0"
     },
     "symfony/debug": {
         "version": "v4.0.2"
@@ -266,8 +297,14 @@
     "symfony/doctrine-bridge": {
         "version": "v4.0.8"
     },
+    "symfony/dom-crawler": {
+        "version": "v4.4.0"
+    },
     "symfony/dotenv": {
         "version": "v4.0.2"
+    },
+    "symfony/error-handler": {
+        "version": "v4.4.0"
     },
     "symfony/event-dispatcher": {
         "version": "v4.0.2"

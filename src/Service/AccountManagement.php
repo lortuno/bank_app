@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-
+use Exception;
 use App\Entity\Account;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +19,7 @@ class AccountManagement
      * AccountManagement constructor.
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {

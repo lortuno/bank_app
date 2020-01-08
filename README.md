@@ -50,3 +50,31 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:diff 
 php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
+```
+
+**Lanzar los tests de PHPunit**
+
+En la carpeta de tests se encuentran los ficheros para tests de phpunit, que se pueden ejecutar si lanzamos: 
+
+```
+sudo apt install phpunit
+phpunit
+```
+
+Los tests de behat están en features y se ejecutan con: 
+``
+vendor/bin/behat 
+``
+
+Es necesario que el servidor esté activo para los tests. El servidor se inicializa con: 
+``
+php -S localhost:8000 -t public
+``
+
+Resolución de problemas: 
+- Si se pide el apcu enabled y no lo tenemos, hay que instalarlo. Podemos comprobar si está activado en /phpinfo buscando
+apcu:
+
+``
+sudo apt-get install php-apcu
+``

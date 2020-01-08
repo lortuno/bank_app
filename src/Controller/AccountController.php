@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -73,5 +72,17 @@ class AccountController extends BaseController
         } catch (\Exception $e) {
             $this->addFlash('error', 'Error: no se pudo borrar el Usuario');
         }
+    }
+
+    /**
+     * @Route("/phpinfo", name="app_info")
+     */
+    public function info()
+    {
+        ob_start();
+        phpinfo();
+        $phpinfo = ob_get_clean();
+
+        return $this->render('security/phpinfo.html.twig', array('phpinfo' => $phpinfo));
     }
 }
