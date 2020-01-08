@@ -66,10 +66,33 @@ Los tests de behat están en features y se ejecutan con:
 vendor/bin/behat 
 ``
 
+O si queremos una suite concreta, por ejemplo: 
+``
+vendor/bin/behat -s web
+``
+
 Es necesario que el servidor esté activo para los tests. El servidor se inicializa con: 
 ``
 php -S localhost:8000 -t public
 ``
+
+**Corrección de código**
+Está instalado el php-sniffer, para poder comprobar y corregir desde el terminal los fallos de codificación y mantener 
+un código homogéneo. 
+Para utilizarlo basta con escribir el comando, el estandar y la carpeta en la que buscar los fallos. 
+```
+phpcs --standard=PSR2 src
+```
+
+Para corregir automáticamente: 
+```
+phpcbf --standard=PSR2 src
+```
+
+Para limpiar caché: 
+```
+php bin/console cache:clear
+```
 
 Resolución de problemas: 
 - Si se pide el apcu enabled y no lo tenemos, hay que instalarlo. Podemos comprobar si está activado en /phpinfo buscando

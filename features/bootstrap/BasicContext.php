@@ -16,4 +16,29 @@ class BasicContext extends RawMinkContext implements Context, SnippetAcceptingCo
     {
     }
 
+    /**
+     * @When I click :linkName
+     */
+    public function iClick($linkName)
+    {
+        $this->getPage()->clickLink($linkName);
+    }
+
+    /**
+     * @Then the :tag value must be :value
+     * @param $tag
+     * @param $value
+     * @throws Exception
+     */
+    public function checkValueMatches($tag, $value)
+    {
+        $page = $this->getMink()->getSession()->getPage();
+        $currentValue = $page->find('css', $tag)->getAttribute('value');
+
+        if ($currentValue !== $value) {
+            throw new Exception('Incorrect value');
+        }
+    }
+
+
 }
