@@ -1,10 +1,31 @@
 default:
   suites:
-    default:
+    web:
+      paths: [ "%paths.base%/features/web" ]
       contexts:
         - FeatureContext
         - Behat\MinkExtension\Context\MinkContext
+        - behatch:context:browser
+        - behatch:context:debug
+        - behatch:context:system
+        - behatch:context:json
+        - behatch:context:table
+        - behatch:context:rest
+        - behatch:context:xml
+    api:
+      paths: [ "%paths.base%/features/api" ]
+      contexts:
+        - FeatureContext
+        - Behat\MinkExtension\Context\MinkContext
+        - behatch:context:browser
+        - behatch:context:debug
+        - behatch:context:system
+        - behatch:context:json
+        - behatch:context:table
+        - behatch:context:rest
+        - behatch:context:xml
   extensions:
+    Behatch\Extension: ~
     Behat\MinkExtension:
       base_url:  "http://localhost:8000"
       selenium2: ~

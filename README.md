@@ -71,6 +71,11 @@ O si queremos una suite concreta, por ejemplo:
 vendor/bin/behat -s web
 ``
 
+Las sentencias disponibles están en: 
+``
+vendor/bin/behat -dl
+``
+
 Es necesario que el servidor esté activo para los tests. El servidor se inicializa con: 
 ``
 php -S localhost:8000 -t public
