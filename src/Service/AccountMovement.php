@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Account;
 use App\Entity\AccountHistory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -133,6 +134,7 @@ class AccountMovement extends AccountManagement
         $accountHistory->setBeforeMoney($this->getAccount()->getMoney());
         $accountHistory->setAfterMoney($this->getBankMoneyResult());
         $accountHistory->setDate($now);
+        $accountHistory->setStatus(Account::ACTIVE_STATUS);
 
         return $accountHistory;
     }

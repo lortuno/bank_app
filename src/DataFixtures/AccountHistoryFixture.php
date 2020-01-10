@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Account;
 use App\Entity\AccountHistory;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -16,6 +17,7 @@ class AccountHistoryFixture extends BaseFixture
             $movement->setDate($this->faker->dateTimeThisYear);
             $movement->setBeforeMoney($this->faker->randomFloat());
             $movement->setAfterMoney($this->faker->randomFloat());
+            $movement->setStatus(Account::ACTIVE_STATUS);
 
             return $movement;
         });

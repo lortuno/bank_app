@@ -41,6 +41,11 @@ class AccountHistory
      */
     private $date;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,5 +109,21 @@ class AccountHistory
         $this->date = $date;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
     }
 }
