@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Entity\AccountHistory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Datetime;
+use Exception;
 
 class AccountMovement extends AccountManagement
 {
@@ -52,7 +54,7 @@ class AccountMovement extends AccountManagement
      * AccountMovements constructor.
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {
@@ -62,7 +64,7 @@ class AccountMovement extends AccountManagement
 
     /**
      * Guarda el movimiento en la cuenta y en el histórico de movimientos.
-     * @throws \Exception
+     * @throws Exception
      */
     public function saveAccountMovement()
     {
@@ -73,8 +75,8 @@ class AccountMovement extends AccountManagement
             $this->em->persist($accountHistory);
             $this->em->persist($this->getAccount());
             $this->em->flush();
-        } catch (\Exception $e) {
-            throw new \Exception('Error during Saving movement ' . $e->getMessage(), 500);
+        } catch (Exception $e) {
+            throw new Exception('Error during Saving movement ' . $e->getMessage(), 500);
         }
     }
 
@@ -87,12 +89,12 @@ class AccountMovement extends AccountManagement
 
     /**
      * @param int $amount
-     * @throws \Exception
+     * @throws Exception
      */
     private function withdraw(int $amount): void
     {
         if ($amount > $this->getAccount()->getMoney()) {
-            throw new \Exception('User does not have enough money. User has €' . $this->getAccount()->getMoney(), 403);
+            throw new Exception('User does not have enough money. User has €' . $this->getAccount()->getMoney(), 403);
         }
 
         $total = $this->getAccount()->getMoney() - $amount;
@@ -109,21 +111,22 @@ class AccountMovement extends AccountManagement
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function checkUserOperationIsAllowed()
     {
         $this->checkUserOwnsAccount();
+        $this->checkActiveAccount();
         $this->checkMoneyQuantityAllowed();
     }
 
     /**
      * @return AccountHistory
-     * @throws \Exception
+     * @throws Exception
      */
     private function getAccountHistoryData()
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         $accountHistory = new AccountHistory();
         $accountHistory->setAccountId($this->getAccount()->getId());
         $accountHistory->setUserId($this->getUserId());
@@ -136,7 +139,7 @@ class AccountMovement extends AccountManagement
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private function getBankMoneyResult()
     {
@@ -150,7 +153,7 @@ class AccountMovement extends AccountManagement
                 $this->deposit($this->getMoneyQuantity());
                 break;
             default:
-                throw new \Exception('Operation type not allowed: ' . $operationType, 404);
+                throw new Exception('Operation type not allowed: ' . $operationType, 404);
                 break;
         }
 
@@ -159,31 +162,25 @@ class AccountMovement extends AccountManagement
 
     /**
      * @return bool
-     * @throws \Exception
-     */
-    private function checkUserOwnsAccount()
-    {
-        $userId = $this->getUserId();
-
-        if ($users = $this->getAccount()->getUsers()) {
-            foreach ($users as $user) {
-                if ($user->getId() == $userId) {
-                    return true;
-                }
-            }
-        }
-
-        throw new \Exception('User ' . $userId . ' does not own account', 403);
-    }
-
-    /**
-     * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function checkMoneyQuantityAllowed()
     {
         if ($this->getMoneyQuantity() > self::MAX_MONEY_OPERATION) {
-            throw new \Exception('User cannot make this op through the app', 403);
+            throw new Exception('User cannot make this op through the app', 403);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    private function checkActiveAccount()
+    {
+        if ($this->getAccount()->getStatus() === 0) {
+            throw new Exception('This account is not currently active', 403);
         }
 
         return true;

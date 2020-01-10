@@ -1,5 +1,5 @@
 Feature:
-  In order to prove that accounts are managed correctly
+  In order to prove that movements are managed correctly
   As a user
   I want to send requests that give me a proper answer
 

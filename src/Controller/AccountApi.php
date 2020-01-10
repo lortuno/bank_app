@@ -45,7 +45,7 @@ class AccountApi extends BaseController
     }
 
     /**
-     * @Route("/api/account/{account_id}/remove", name="api_account_remove")
+     * @Route("/api/account/remove", name="api_account_remove")
      */
     public function removeAccountApi(Request $request, EntityManagerInterface $em)
     {
@@ -60,7 +60,7 @@ class AccountApi extends BaseController
     }
 
     /**
-     * @Route("/api/user/{user_id}/remove", name="api_user_remove")
+     * @Route("/api/user/remove", name="api_user_remove")
      */
     public function removeUserApi(Request $request, EntityManagerInterface $em)
     {

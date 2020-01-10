@@ -23,7 +23,7 @@ movimientos.
 que ser personalizable con el dinero que dispone.
 * Si la operación es mayor de 2000€, la app dirá que no es una operación válida para realizar desde la
 aplicación.
-* Realización de pruebas para la comprobación que funciona correctamente.
+* Realización de pruebas para la comprobación de que funciona correctamente.
 
 ## Configuración del proyecto
 **Descargar dependencias de composer**

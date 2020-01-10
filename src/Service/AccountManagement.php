@@ -23,7 +23,7 @@ class AccountManagement
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {
-        $id = $request->get('account_id');
+        $id = $request->request->get('account_id');
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->find($id);
 
@@ -68,12 +68,12 @@ class AccountManagement
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function checkAccountExists()
     {
         if (!$this->account) {
-            throw new \Exception('Account requested does not exist', 404);
+            throw new Exception('Account requested does not exist', 404);
         }
 
         return true;
@@ -81,49 +81,79 @@ class AccountManagement
 
     private function setOperationProperties()
     {
-        $this->setUserId($this->request->request->get('user_id'));
+        $userId = $this->request->request->get('user_id');
+        $this->setUserId($userId);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeAccount()
     {
         try {
+            $this->checkUserOwnsAccount();
+        } catch (Exception $exception) {
+            throw new Exception( $exception->getMessage(), $exception->getCode());
+        }
+
+        try {
             $this->account->setStatus(Account::INACTIVE_STATUS);
             $this->em->flush();
-        } catch (\Exception $e) {
-            throw new \Exception('Error on deleting account ' . $e->getMessage(), 500);
+        } catch (Exception $e) {
+            throw new Exception('Error on deleting account ' . $e->getMessage(), 500);
         }
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeUserAccessToAccount()
     {
-        if ($this->getUserId() && $this->getAccount()) {
-            $userRepository = $this->em->getRepository(User::class);
-            $user = $userRepository->find($this->getUserId());
-            $this->checkUserExists($user);
+        try {
+            $this->checkUserOwnsAccount();
+        } catch (Exception $exception) {
+            throw new Exception( $exception->getMessage(), $exception->getCode());
         }
 
         try {
+            $userRepository = $this->em->getRepository(User::class);
+            $user = $userRepository->find($this->getUserId());
+            $this->checkUserExists($user);
+
             $this->account->removeUser($user);
             $this->em->flush();
-        } catch (\Exception $e) {
-            throw new \Exception('Error on deleting user ' . $e->getMessage(), 500);
+        } catch (Exception $e) {
+            throw new Exception('Error on deleting user ' . $e->getMessage(), 500);
         }
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function checkUserOwnsAccount()
+    {
+        $userId = $this->getUserId();
+
+        if ($users = $this->getAccount()->getUsers()) {
+            foreach ($users as $user) {
+                if ($user->getId() == $userId) {
+                    return true;
+                }
+            }
+        }
+
+        throw new Exception('User ' . $userId . ' does not own account', 403);
     }
 
     /**
      * @param $user
-     * @throws \Exception
+     * @throws Exception
      */
     protected function checkUserExists($user)
     {
         if (!$user) {
-            throw new \Exception('USER_NOT_FOUND', 404);
+            throw new Exception('USER_NOT_FOUND', 404);
         }
     }
 }
