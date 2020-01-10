@@ -36,3 +36,12 @@ Feature:
     Then the response status code should be 200
     And the response should be in JSON
     And the response should contain "ACCOUNT_DELETED"
+
+  Scenario: User removes account again, and it is not active.
+    Given I send a POST request to "/api/account/remove" with parameters:
+      | key     | value      |
+      | account_id    | 71  |
+      | user_id    | 135  |
+    Then the response status code should be 403
+    And the response should be in JSON
+    And the response should contain "This account is not currently active"

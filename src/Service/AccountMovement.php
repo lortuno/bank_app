@@ -172,17 +172,4 @@ class AccountMovement extends AccountManagement
 
         return true;
     }
-
-    /**
-     * @return bool
-     * @throws Exception
-     */
-    private function checkActiveAccount()
-    {
-        if ($this->getAccount()->getStatus() === 0) {
-            throw new Exception('This account is not currently active', 403);
-        }
-
-        return true;
-    }
 }

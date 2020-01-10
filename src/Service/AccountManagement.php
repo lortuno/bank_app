@@ -92,6 +92,7 @@ class AccountManagement
     {
         try {
             $this->checkUserOwnsAccount();
+            $this->checkActiveAccount();
         } catch (Exception $exception) {
             throw new Exception( $exception->getMessage(), $exception->getCode());
         }
@@ -155,5 +156,18 @@ class AccountManagement
         if (!$user) {
             throw new Exception('USER_NOT_FOUND', 404);
         }
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function checkActiveAccount()
+    {
+        if ($this->getAccount()->getStatus() === 0) {
+            throw new Exception('This account is not currently active', 403);
+        }
+
+        return true;
     }
 }
