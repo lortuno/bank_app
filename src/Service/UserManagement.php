@@ -6,9 +6,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Entity\UserDeleted;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserManagement
 {

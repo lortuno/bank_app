@@ -24,4 +24,14 @@ class UserRegistrationFormModel
      * @Assert\IsTrue(message="I know, it's silly, but you must agree to our terms.")
      */
     public $agreeTerms;
+
+    /**
+     * @Assert\NotBlank(message="Fill in your lastname!")
+     */
+    public $lastName;
+
+    /**
+     * @Assert\NotBlank(message="Fill in your name!")
+     */
+    public $name;
 }

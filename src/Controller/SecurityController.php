@@ -62,6 +62,8 @@ class SecurityController extends AbstractController
                 $user,
                 $userModel->plainPassword
             ));
+            $user->setLastname($userModel->lastName);
+            $user->setFirstName($userModel->name);
             // be absolutely sure they agree
             if (true === $userModel->agreeTerms) {
                 $user->agreeToTerms();

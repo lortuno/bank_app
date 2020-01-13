@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\AccountHelper;
+use App\Helper\AccountHelper;
 use App\Service\AccountManagement;
 use App\Service\AccountMovement;
 use App\Service\UserManagement;
@@ -69,6 +69,21 @@ class AccountApi extends BaseController
             $user->removeUser();
 
             return new JsonResponse('USER_DELETED', 201);
+        } catch (\Exception $e) {
+            return AccountHelper::getJsonErrorResponse($e);
+        }
+    }
+
+    /**
+     * @Route("/api/user/create", name="api_user_remove")
+     */
+    public function createUserApi(Request $request, EntityManagerInterface $em)
+    {
+        try {
+            $user = new UserManagement($request, $em);
+            $user->removeUser();
+
+            return new JsonResponse('USER_CREATED', 201);
         } catch (\Exception $e) {
             return AccountHelper::getJsonErrorResponse($e);
         }

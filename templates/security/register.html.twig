@@ -43,6 +43,12 @@
                 {{ form_row(registrationForm.email, {
                     attr: { placeholder: 'Email' }
                 }) }}
+                {{ form_row(registrationForm.name, {
+                    attr: { placeholder: 'your Name' }
+                }) }}
+                {{ form_row(registrationForm.lastName, {
+                    attr: { placeholder: 'your lastname' }
+                }) }}
                 {{ form_row(registrationForm.plainPassword, {
                     attr: { placeholder: 'Password' }
                 }) }}
@@ -52,25 +58,6 @@
                     Register
                 </button>
             {{ form_end(registrationForm) }}
-
-            {#
-            <form class="form-signin" method="post">
-                <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-                <label for="inputEmail" class="sr-only">Email address</label>
-                <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" name="_terms" required> Agree to terms I for sure read
-                    </label>
-                </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">
-                    Register
-                </button>
-            </form>
-            #}
         </div>
     </div>
 </div>
