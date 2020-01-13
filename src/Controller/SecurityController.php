@@ -6,7 +6,11 @@ use App\Entity\User;
 use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
+use App\Service\UserManagement;
+use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -42,36 +46,26 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/register", name="app_register")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param EntityManagerInterface $em
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @param LoginFormAuthenticator $formAuthenticator
+     * @param FormFactoryInterface $formFactory
+     * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function register(
         Request $request,
         UserPasswordEncoderInterface $passwordEncoder,
+        EntityManagerInterface $em,
         GuardAuthenticatorHandler $guardHandler,
-        LoginFormAuthenticator $formAuthenticator
+        LoginFormAuthenticator $formAuthenticator,
+        FormFactoryInterface $formFactory
     ) {
-        $form = $this->createForm(UserRegistrationFormType::class);
-        $form->handleRequest($request);
+        $userManager = new UserManagement($request, $em, $passwordEncoder, $guardHandler, $formFactory);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UserRegistrationFormModel $userModel */
-            $userModel = $form->getData();
-
-            $user = new User();
-            $user->setEmail($userModel->email);
-            $user->setPassword($passwordEncoder->encodePassword(
-                $user,
-                $userModel->plainPassword
-            ));
-            $user->setLastname($userModel->lastName);
-            $user->setFirstName($userModel->name);
-            // be absolutely sure they agree
-            if (true === $userModel->agreeTerms) {
-                $user->agreeToTerms();
-            }
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+        try {
+            $user = $userManager->registerUser();
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
@@ -79,10 +73,13 @@ class SecurityController extends AbstractController
                 $formAuthenticator,
                 'main'
             );
-        }
+        } catch (\Exception $exception) {
+            $form = $this->createForm(UserRegistrationFormType::class);
+            $form->handleRequest($request);
 
-        return $this->render('security/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+            return $this->render('security/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
+        }
     }
 }

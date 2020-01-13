@@ -8,8 +8,11 @@ use App\Service\UserManagement;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -21,7 +24,7 @@ class AccountController extends BaseController
      */
     public function index(LoggerInterface $logger)
     {
-        $logger->debug('Checking account page for '.$this->getUser()->getEmail());
+        $logger->debug('Checking account page for ' . $this->getUser()->getEmail());
 
         return $this->render('account/index.html.twig', [
             'client' => $this->getUser(),
@@ -54,11 +57,23 @@ class AccountController extends BaseController
 
     /**
      * @Route("/user/{user_id}/remove", name="user_remove")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @param FormFactoryInterface $formFactory
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeUser(Request $request, EntityManagerInterface $em)
-    {
+    public function removeUser(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordEncoderInterface $passwordEncoder,
+        GuardAuthenticatorHandler $guardHandler,
+        FormFactoryInterface $formFactory
+    ) {
         try {
-            $user = new UserManagement($request, $em);
+            $user = new UserManagement($request, $em, $passwordEncoder, $guardHandler, $formFactory);
+            $user->setUserRequested();
             $user->removeUser();
             $this->get('security.context')->setToken(null);
             $session = $request->getSession();
@@ -67,7 +82,7 @@ class AccountController extends BaseController
 
             return $this->render('security/login.html.twig', [
                 'last_username' => '',
-                'error'         => '',
+                'error' => '',
             ]);
         } catch (\Exception $e) {
             $this->addFlash('error', 'Error: no se pudo borrar el Usuario');

@@ -19,18 +19,24 @@ class AccountManagement
      * AccountManagement constructor.
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @throws Exception
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {
-        $id = $request->request->get('account_id');
-        $accountRepository = $em->getRepository(Account::class);
+        $this->em = $em;
+        $this->request = $request;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setAccountRequested()
+    {
+        $id = $this->request->request->get('account_id');
+        $accountRepository = $this->em->getRepository(Account::class);
         $account = $accountRepository->find($id);
 
         $this->setAccount($account);
         $this->checkAccountExists();
-        $this->em = $em;
-        $this->request = $request;
         $this->setOperationProperties();
     }
 

@@ -60,7 +60,6 @@ class AccountMovement extends AccountManagement
     public function __construct(Request $request, EntityManagerInterface $em)
     {
         parent::__construct($request, $em);
-        $this->setOperationProperties();
     }
 
     /**
@@ -81,8 +80,12 @@ class AccountMovement extends AccountManagement
         }
     }
 
-    private function setOperationProperties()
+    /**
+     * @throws Exception
+     */
+    public function setOperationProperties()
     {
+        $this->setAccountRequested();
         $this->setUserId($this->request->request->get('user_id'));
         $this->setOperationType($this->request->request->get('operation_type'));
         $this->setMoneyQuantity($this->request->request->get('money'));
