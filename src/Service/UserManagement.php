@@ -6,6 +6,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Entity\UserDeleted;
 use App\Form\Model\UserRegistrationFormModel;
+use App\Form\UserFormType;
 use App\Form\UserRegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -158,7 +159,36 @@ class UserManagement
             throw new Exception('User form invalid', 503);
 
         } catch (Exception $e) {
-            throw new Exception('Error on user creation', 500);
+            throw new Exception('Error on user creation ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param bool $csrfTokenActive
+     * @return User|false
+     * @throws Exception
+     */
+    public function editUser($csrfTokenActive = true)
+    {
+        try {
+            $options =  array('csrf_protection' => $csrfTokenActive);
+            $user = $this->user;
+
+            $form = $this->formFactory->create(UserFormType::class, $user, $options);
+            $form->handleRequest($this->request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $this->em;
+                $em->persist($user);
+                $em->flush();
+
+                return $user;
+            }
+
+           return false;
+
+        } catch (Exception $e) {
+            throw new Exception('Error on user edition '. $e->getMessage(), 500);
         }
     }
 }

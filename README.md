@@ -16,7 +16,7 @@ movimientos.
 * Dar de baja cuentas.
 
 ## Especificaciones:
-* Todas estas acciones se harán usando servicios
+* Todas estas acciones se harán usando servicios.
 * Las respuestas deben serializarse en formato JSON.
 * El número de cuenta es alfanumérico. 
 * No se podrá sacar dinero si no dispone de la cantidad requerida y el mensaje tendrá

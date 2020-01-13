@@ -2,6 +2,9 @@
 
 {% block content_body %}
     <h1>Edita Tu perfil</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
 
     {{ include('user_edition/_form.html.twig', {
 

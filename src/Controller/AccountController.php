@@ -33,8 +33,63 @@ class AccountController extends BaseController
 
     /**
      * @Route("/user/{id}/edit", name="user_edit")
+     * @param User $user
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @param FormFactoryInterface $formFactory
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function edit(User $user, Request $request, EntityManagerInterface $em)
+    public function edit(
+        User $user,
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordEncoderInterface $passwordEncoder,
+        GuardAuthenticatorHandler $guardHandler,
+        FormFactoryInterface $formFactory
+    ) {
+        try {
+            $userManager = new UserManagement($request, $em, $passwordEncoder, $guardHandler, $formFactory);
+            $userManager->setUser($user);
+            $userEdition = $userManager->editUser(true);
+
+            if ($userEdition) {
+                $this->addFlash('success', 'Usuario actualizado con éxito');
+
+                return $this->redirectToRoute('user_edit', [
+                    'id' => $user->getId(),
+                ]);
+            }
+
+            return $this->renderEditForm($user);
+
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            $error = $e->getMessage();
+            return $this->renderEditForm($user, $error);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @param string $error
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function renderEditForm(User $user, $error = '')
+    {
+        $form = $this->createForm(UserFormType::class, $user);
+
+        return $this->render('user_edition/edit.html.twig', [
+            'userForm' => $form->createView(),
+            'error' => $error,
+        ]);
+    }
+
+    /**
+     * @Route("/user/{id}/edit2", name="user_edit2")
+     */
+    public function editOld(User $user, Request $request, EntityManagerInterface $em)
     {
         $form = $this->createForm(UserFormType::class, $user);
 
@@ -70,8 +125,10 @@ class AccountController extends BaseController
         UserPasswordEncoderInterface $passwordEncoder,
         GuardAuthenticatorHandler $guardHandler,
         FormFactoryInterface $formFactory
-    ) {
+    )
+    {
         try {
+            $request->request->set('user_id', $request->get('user_id'));
             $user = new UserManagement($request, $em, $passwordEncoder, $guardHandler, $formFactory);
             $user->setUserRequested();
             $user->removeUser();

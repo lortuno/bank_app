@@ -30,7 +30,7 @@ Feature:
     And the "#user_form_city" value must be "My city log"
 
   Scenario: User gets info json
-    Given I go to "/api/account"
+    Given I go to "/api/user_info"
     Then print last response
     Then the response should be in JSON
     And the JSON node "email" should contain "client4@example.com"
