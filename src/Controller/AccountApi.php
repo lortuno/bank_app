@@ -52,6 +52,42 @@ class AccountApi extends BaseController
     }
 
     /**
+     * @Route("/api/account/create", name="api_account_create")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function createAccountApi(Request $request, EntityManagerInterface $em)
+    {
+        try {
+            $account = new AccountManagement($request, $em);
+            $account->createAccount();
+
+            return new JsonResponse('ACCOUNT_CREATED: ', 201);
+        } catch (\Exception $e) {
+            return AccountHelper::getJsonErrorResponse($e);
+        }
+    }
+
+    /**
+     * @Route("/api/account/add/user", name="api_account_add_user")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function addUserAccountApi(Request $request, EntityManagerInterface $em)
+    {
+        try {
+            $account = new AccountManagement($request, $em);
+            $account->associateAccount();
+
+            return new JsonResponse('ACCOUNT_ATTACHED', 200);
+        } catch (\Exception $e) {
+            return AccountHelper::getJsonErrorResponse($e);
+        }
+    }
+
+    /**
      * @Route("/api/account/remove_user", name="api_user_account_remove")
      */
     public function removeAccountUserAccessApi(Request $request, EntityManagerInterface $em)

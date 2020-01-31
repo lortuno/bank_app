@@ -7,11 +7,13 @@ use App\Entity\Account;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Faker\Factory;
 
 class AccountManagement
 {
     protected $em;
     protected $request;
+    protected $faker;
     private $account;
     private $userId;
 
@@ -19,11 +21,13 @@ class AccountManagement
      * AccountManagement constructor.
      * @param Request $request
      * @param EntityManagerInterface $em
+     * @param Factory $factory
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {
         $this->em = $em;
         $this->request = $request;
+        $this->faker = Factory::create();
     }
 
     /**
@@ -91,6 +95,24 @@ class AccountManagement
         $this->setUserId($userId);
     }
 
+    public function createAccount()
+    {
+        $date = new \DateTime();
+        $account = new Account();
+        $account->setNumber($this->faker->bankAccountNumber . $this->faker->citySuffix);
+        $account->setCreated($date);
+        $account->setModified($date);
+        $account->setStatus(Account::ACTIVE_STATUS);
+        $account->setMoney(0);
+
+        try {
+            $this->em->persist($account);
+            $this->em->flush();
+        } catch (Exception $e) {
+            throw new Exception('Error on creating account ' . $e->getMessage(), 500);
+        }
+    }
+
     /**
      * @throws Exception
      */
@@ -108,6 +130,33 @@ class AccountManagement
             $this->em->flush();
         } catch (Exception $e) {
             throw new Exception('Error on deleting account ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function associateAccount()
+    {
+        try {
+            $this->setOperationProperties();
+            $accountId = $this->request->request->get('account_id');
+            $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $accountId]);
+
+            if (!$account) {
+                throw new Exception('Error; the account does not exist.', 404);
+            }
+        } catch (Exception $exception) {
+            throw new Exception( $exception->getMessage(), $exception->getCode());
+        }
+
+        try {
+            $user = $this->em->getRepository(User::class)->find($this->getUserId());
+            $this->checkUserExists($user);
+            $account->addUser($user);
+            $this->em->flush();
+        } catch (Exception $e) {
+            throw new Exception('Error on associating user to account ' . $e->getMessage(), 500);
         }
     }
 

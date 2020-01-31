@@ -14,7 +14,7 @@ class AccountFixture extends BaseFixture implements DependentFixtureInterface
         $this->createMany(10, 'account', function () {
             $account = new Account();
             $account->setNumber($this->faker->bankAccountNumber . $this->faker->citySuffix);
-            $account->setCreated($this->faker->dateTimeThisDecade());
+            $account->setCreated($this->faker->dateTimeThisCentury());
             $account->setModified($this->faker->dateTimeThisMonth());
             $account->setMoney($this->faker->randomFloat());
             $account->setStatus(Account::ACTIVE_STATUS);
