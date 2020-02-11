@@ -34,7 +34,7 @@ class AccountManagement
     /**
      * @throws Exception
      */
-    public function setAccountRequested()
+    private function setAccountRequested()
     {
         $number = $this->request->request->get('account_number');
         $accountRepository = $this->em->getRepository(Account::class);
@@ -42,6 +42,17 @@ class AccountManagement
 
         $this->setAccount($account);
         $this->checkAccountExists($number);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function setUserRequested()
+    {
+        $username = $this->request->request->get('email');
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $username]);
+        $this->setUser($user);
+        $this->checkUserExists();
     }
 
     /**
@@ -95,10 +106,7 @@ class AccountManagement
      */
     public function setOperationProperties()
     {
-        $username = $this->request->request->get('email');
-        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $username]);
-        $this->setUser($user);
-        $this->checkUserExists();
+        $this->setUserRequested();
         $this->setAccountRequested();
     }
 
