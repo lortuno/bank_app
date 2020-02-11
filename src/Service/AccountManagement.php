@@ -15,19 +15,20 @@ class AccountManagement
     protected $request;
     protected $faker;
     private $account;
-    private $userId;
+    protected $user;
 
     /**
      * AccountManagement constructor.
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @param Factory $factory
+     * @throws Exception
      */
     public function __construct(Request $request, EntityManagerInterface $em)
     {
         $this->em = $em;
         $this->request = $request;
         $this->faker = Factory::create();
+        $this->setOperationProperties();
     }
 
     /**
@@ -35,13 +36,12 @@ class AccountManagement
      */
     public function setAccountRequested()
     {
-        $id = $this->request->request->get('account_id');
+        $number = $this->request->request->get('account_number');
         $accountRepository = $this->em->getRepository(Account::class);
-        $account = $accountRepository->find($id);
+        $account = $accountRepository->findOneBy(['number' => $number]);
 
         $this->setAccount($account);
-        $this->checkAccountExists();
-        $this->setOperationProperties();
+        $this->checkAccountExists($number);
     }
 
     /**
@@ -63,38 +63,49 @@ class AccountManagement
     /**
      * @return mixed
      */
-    protected function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
-     * @param mixed $userId
+     * @param mixed $user
      */
-    protected function setUserId($userId): void
+    public function setUser($user): void
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
     /**
+     * @param $number
      * @return bool
      * @throws Exception
      */
-    private function checkAccountExists()
+    private function checkAccountExists($number)
     {
-        if (!$this->account) {
+        if (!$this->account && $number) {
             throw new Exception('Account requested does not exist', 404);
         }
 
         return true;
     }
 
-    private function setOperationProperties()
+    /**
+     * @throws Exception
+     */
+    public function setOperationProperties()
     {
-        $userId = $this->request->request->get('user_id');
-        $this->setUserId($userId);
+        $username = $this->request->request->get('email');
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $username]);
+        $this->setUser($user);
+        $this->checkUserExists();
+        $this->setAccountRequested();
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function createAccount()
     {
         $date = new \DateTime();
@@ -106,8 +117,16 @@ class AccountManagement
         $account->setMoney(0);
 
         try {
+            $account->addUser($this->getUser());
+        } catch (Exception $e) {
+            throw new Exception('Error on adding user to account: ' . $e->getMessage(), 500);
+        }
+
+        try {
             $this->em->persist($account);
             $this->em->flush();
+
+            return true;
         } catch (Exception $e) {
             throw new Exception('Error on creating account ' . $e->getMessage(), 500);
         }
@@ -139,9 +158,7 @@ class AccountManagement
     public function associateAccount()
     {
         try {
-            $this->setOperationProperties();
-            $accountId = $this->request->request->get('account_id');
-            $account = $this->em->getRepository(Account::class)->findOneBy(['id' => $accountId]);
+            $account = $this->getAccount();
 
             if (!$account) {
                 throw new Exception('Error; the account does not exist.', 404);
@@ -151,9 +168,7 @@ class AccountManagement
         }
 
         try {
-            $user = $this->em->getRepository(User::class)->find($this->getUserId());
-            $this->checkUserExists($user);
-            $account->addUser($user);
+            $account->addUser($this->getUser());
             $this->em->flush();
         } catch (Exception $e) {
             throw new Exception('Error on associating user to account ' . $e->getMessage(), 500);
@@ -172,11 +187,7 @@ class AccountManagement
         }
 
         try {
-            $userRepository = $this->em->getRepository(User::class);
-            $user = $userRepository->find($this->getUserId());
-            $this->checkUserExists($user);
-
-            $this->account->removeUser($user);
+            $this->account->removeUser($this->user);
             $this->em->flush();
         } catch (Exception $e) {
             throw new Exception('Error on deleting user ' . $e->getMessage(), 500);
@@ -189,26 +200,25 @@ class AccountManagement
      */
     public function checkUserOwnsAccount()
     {
-        $userId = $this->getUserId();
+        $userEmail = $this->getUser()->getEmail();
 
         if ($users = $this->getAccount()->getUsers()) {
             foreach ($users as $user) {
-                if ($user->getId() == $userId) {
+                if ($user->getEmail() == $userEmail) {
                     return true;
                 }
             }
         }
 
-        throw new Exception('User ' . $userId . ' does not own account', 403);
+        throw new Exception('User ' . $userEmail . ' does not own account', 403);
     }
 
     /**
-     * @param $user
      * @throws Exception
      */
-    protected function checkUserExists($user)
+    protected function checkUserExists()
     {
-        if (!$user) {
+        if (!$this->user) {
             throw new Exception('USER_NOT_FOUND', 404);
         }
     }

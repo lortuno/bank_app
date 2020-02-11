@@ -85,8 +85,7 @@ class AccountMovement extends AccountManagement
      */
     public function setOperationProperties()
     {
-        $this->setAccountRequested();
-        $this->setUserId($this->request->request->get('user_id'));
+        parent::setOperationProperties();
         $this->setOperationType($this->request->request->get('operation_type'));
         $this->setMoneyQuantity($this->request->request->get('money'));
     }
@@ -133,7 +132,7 @@ class AccountMovement extends AccountManagement
         $now = new DateTime();
         $accountHistory = new AccountHistory();
         $accountHistory->setAccountId($this->getAccount()->getId());
-        $accountHistory->setUserId($this->getUserId());
+        $accountHistory->setUserId($this->getUser()->getId());
         $accountHistory->setBeforeMoney($this->getAccount()->getMoney());
         $accountHistory->setAfterMoney($this->getBankMoneyResult());
         $accountHistory->setDate($now);

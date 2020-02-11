@@ -11,9 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @IsGranted("ROLE_USER")
- */
+
 class AccountApi extends BaseController
 {
     /**
@@ -42,7 +40,6 @@ class AccountApi extends BaseController
     {
         try {
             $account = new AccountManagement($request, $em);
-            $account->setAccountRequested();
             $account->removeAccount();
 
             return new JsonResponse('ACCOUNT_DELETED', 200);
@@ -63,7 +60,7 @@ class AccountApi extends BaseController
             $account = new AccountManagement($request, $em);
             $account->createAccount();
 
-            return new JsonResponse('ACCOUNT_CREATED: ', 201);
+            return new JsonResponse('ACCOUNT_CREATED', 201);
         } catch (\Exception $e) {
             return AccountHelper::getJsonErrorResponse($e);
         }
@@ -94,7 +91,6 @@ class AccountApi extends BaseController
     {
         try {
             $account = new AccountManagement($request, $em);
-            $account->setAccountRequested();
             $account->removeUserAccessToAccount();
 
             return new JsonResponse('USER_ACCOUNT_DELETED', 200);

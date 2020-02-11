@@ -19,7 +19,32 @@ class UserFixture extends BaseFixture
 
     protected function loadData(ObjectManager $manager)
     {
-        $this->createMany(10, 'main_users', function ($i) use ($manager) {
+        // Test user
+        for($i=1; $i<=2; $i++) {
+            $user = new User();
+            $user->setEmail('test_client'.$i.'@example.com');
+            $user->setFirstName('test');
+            $user->setLastname('user');
+            $user->setPostalCode($this->faker->postcode);
+            $user->setCity($this->faker->city);
+            $user->setAddress($this->faker->address);
+            $user->setTownship($this->faker->country);
+            $user->agreeToTerms();
+            $this->addReference('test_user_'.$i, $user);
+
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                $user,
+                'password'
+            ));
+
+            $apiToken1 = new ApiToken($user);
+            $apiToken2 = new ApiToken($user);
+            $manager->persist($apiToken1);
+            $manager->persist($apiToken2);
+            $manager->persist($user);
+        }
+
+        $this->createMany(9, 'main_users', function ($i) use ($manager) {
             $user = new User();
             $user->setEmail(sprintf('client%d@example.com', $i));
             $user->setFirstName($this->faker->firstName);

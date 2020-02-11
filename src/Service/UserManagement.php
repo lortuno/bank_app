@@ -67,9 +67,9 @@ class UserManagement
      */
     public function setUserRequested()
     {
-        $id = $this->request->request->get('user_id');
+        $username = $this->request->request->get('email');
         $userRepository = $this->em->getRepository(User::class);
-        $user = $userRepository->find($id);
+        $user = $userRepository->findOneBy(['email' => $username]);
 
         $this->setUser($user);
         $this->checkUserExists();

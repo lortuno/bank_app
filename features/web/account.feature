@@ -5,7 +5,7 @@ Feature:
 
   Background: User is logged
     Given I go to "/login"
-    When I fill in "inputEmail" with "client4@example.com"
+    When I fill in "inputEmail" with "test_client1@example.com"
     And  I fill in "inputPassword" with "password"
     And I press "Sign in"
     Then I go to "/"
@@ -33,4 +33,4 @@ Feature:
     Given I go to "/api/user_info"
     Then print last response
     Then the response should be in JSON
-    And the JSON node "email" should contain "client4@example.com"
+    And the JSON node "email" should contain "test_client1@example.com"

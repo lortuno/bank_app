@@ -1,0 +1,431 @@
+{
+	"info": {
+		"_postman_id": "bfbd0fc5-1f6d-469b-84d4-bcb058987d29",
+		"name": "movements",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Retirada dinero",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "money",
+							"value": "1000",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test_client@example.com",
+							"type": "text"
+						},
+						{
+							"key": "account_number",
+							"value": "test1234",
+							"type": "text"
+						},
+						{
+							"key": "operation_type",
+							"value": "take",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/account/make_movement?",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"account",
+						"make_movement"
+					],
+					"query": [
+						{
+							"key": "money",
+							"value": "200",
+							"disabled": true
+						},
+						{
+							"key": "user_id",
+							"value": "121",
+							"disabled": true
+						},
+						{
+							"key": "account_id",
+							"value": "62",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dar dinero",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "money",
+							"value": "3000",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test_client@example.com",
+							"type": "text"
+						},
+						{
+							"key": "account_number",
+							"value": "test1234",
+							"type": "text"
+						},
+						{
+							"key": "operation_type",
+							"value": "give",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/account/make_movement?",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"account",
+						"make_movement"
+					],
+					"query": [
+						{
+							"key": "money",
+							"value": "200",
+							"disabled": true
+						},
+						{
+							"key": "user_id",
+							"value": "121",
+							"disabled": true
+						},
+						{
+							"key": "account_id",
+							"value": "62",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "borrar cuenta del usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "client1@example.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/user/remove",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user",
+						"remove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Desactiva cuenta",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test_client@example.com",
+							"type": "text"
+						},
+						{
+							"key": "account_number",
+							"value": "test1234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/account/remove",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"account",
+						"remove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crea cuenta",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test_client@example.com",
+							"type": "text"
+						},
+						{
+							"key": "account_id",
+							"value": "67",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/account/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"account",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Asociar cuenta a usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test_client@example.com",
+							"type": "text"
+						},
+						{
+							"key": "account_number",
+							"value": "test1234",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/account/add/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"account",
+						"add",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Elimina usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "client3@example.com  ",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "61",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/user/remove",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user",
+						"remove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crea usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_registration_form[email]",
+							"value": "myemail2@example.com",
+							"type": "text"
+						},
+						{
+							"key": "user_registration_form[lastName]",
+							"value": "Rodriguez",
+							"type": "text"
+						},
+						{
+							"key": "user_registration_form[plainPassword]",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "user_registration_form[agreeTerms]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "user_registration_form[name]",
+							"value": "alicia",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/user/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edita usuario ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "150",
+							"type": "text"
+						},
+						{
+							"key": "user_form[address]",
+							"value": "Calle de la luz",
+							"type": "text"
+						},
+						{
+							"key": "user_form[lastName]",
+							"value": "mORGADO",
+							"type": "text"
+						},
+						{
+							"key": "user_form[city]",
+							"value": "Guadalajara",
+							"type": "text"
+						},
+						{
+							"key": "user_form[township]",
+							"value": "Guadalajara",
+							"type": "text"
+						},
+						{
+							"key": "user_form[firstName]",
+							"value": "Marta",
+							"type": "text"
+						},
+						{
+							"key": "user_form[postalCode]",
+							"value": "28019",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/user/edit",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

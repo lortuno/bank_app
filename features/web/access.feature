@@ -14,14 +14,14 @@ Feature:
 
   Scenario: User try to log with a wrong password
     Given I go to "/login"
-    When I fill in "inputEmail" with "client4@example.com"
+    When I fill in "inputEmail" with "test_client1@example.com"
     And  I fill in "inputPassword" with "wrongpassword"
     And I press "Sign in"
     Then I should see "Invalid credentials"
 
   Scenario: User logged is redirected to home
     Given I go to "/login"
-    When I fill in "inputEmail" with "client4@example.com"
+    When I fill in "inputEmail" with "test_client1@example.com"
     And  I fill in "inputPassword" with "password"
     And I press "Sign in"
     Then I should be on "/"

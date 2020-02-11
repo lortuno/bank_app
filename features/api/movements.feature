@@ -13,19 +13,19 @@ Feature:
   Scenario: User does not own account, but account exists
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 63  |
-      | user_id    | 135  |
+      | account_number    | test3333  |
+      | email    | test_client1@example.com  |
       | operation_type  | take  |
       | money      | 50    |
     Then the response status code should be 403
     And the response should be in JSON
-    And the response should contain "User 135 does not own account"
+    And the response should contain "User test_client1@example.com does not own account"
 
   Scenario: User does not own account, and account does not exist
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 630  |
-      | user_id    | 135  |
+      | account_number    | notfound630  |
+      | email    | test_client1@example.com  |
       | operation_type  | take  |
       | money      | 50    |
     Then the response status code should be 404
@@ -35,19 +35,19 @@ Feature:
   Scenario: Account exists, but User does not
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 70  |
-      | user_id    | 1350  |
+      | account_number    | test1234  |
+      | email    | 10  |
       | operation_type  | take  |
       | money      | 50    |
-    Then the response status code should be 403
+    Then the response status code should be 404
     And the response should be in JSON
-    And the response should contain "User 1350 does not own account"
+    And the response should contain "USER_NOT_FOUND"
 
   Scenario: Account and user exist, but operation type does not
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 70  |
-      | user_id    | 135  |
+      | account_number    | test1234  |
+      | email    | test_client1@example.com  |
       | operation_type  | withdraw  |
       | money      | 50    |
     Then the response status code should be 404
@@ -57,10 +57,10 @@ Feature:
   Scenario: User takes too much money for the app
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 64  |
-      | user_id    | 135  |
+      | account_number    | test1234  |
+      | email    | test_client1@example.com  |
       | operation_type  | take  |
-      | money      | 1000000000    |
+      | money      | 100000000    |
     Then the response status code should be 403
     And the response should be in JSON
     And the response should contain "User cannot make this op through the app"
@@ -68,8 +68,8 @@ Feature:
   Scenario: User gives too much money for the app
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 64  |
-      | user_id    | 135  |
+      | account_number    | test1234  |
+      | email    | test_client1@example.com  |
       | operation_type  | give  |
       | money      | 2001    |
     Then the response status code should be 403
@@ -79,8 +79,8 @@ Feature:
   Scenario: User takes more money that he has
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 64  |
-      | user_id    | 135  |
+      | account_number    | test1234  |
+      | email    | test_client1@example.com  |
       | operation_type  | take  |
       | money      | 1999    |
     Then the response status code should be 403
@@ -90,8 +90,8 @@ Feature:
   Scenario: User takes money he has and it works
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 64  |
-      | user_id    | 135  |
+      | account_number    | test1234  |
+      | email    | test_client1@example.com  |
       | operation_type  | take  |
       | money      | 1    |
     Then the response status code should be 201
@@ -101,8 +101,8 @@ Feature:
   Scenario: User gives money and it works
     Given I send a POST request to "/api/account/make_movement" with parameters:
       | key     | value      |
-      | account_id    | 64  |
-      | user_id    | 135  |
+      | account_number    | test1234  |
+      | email    | test_client1@example.com  |
       | operation_type  | give  |
       | money      | 50    |
     Then the response status code should be 201

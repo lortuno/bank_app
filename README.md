@@ -46,6 +46,7 @@ Posteriormente reajustar parámetros, especialmente en los referente a base de d
 Ejecutar los siguientes comandos. Los fixtures introducen data en la BD.
 
 ```
+php bin/console doctrine:database:drop --force
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:diff 
 php bin/console doctrine:migrations:migrate
