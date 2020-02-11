@@ -15,7 +15,7 @@ class AccountManagement
     protected $request;
     protected $faker;
     private $account;
-    protected $user;
+    private $user;
 
     /**
      * AccountManagement constructor.
@@ -88,7 +88,9 @@ class AccountManagement
     }
 
     /**
-     * @param $number
+     * Comprueba que la cuenta existe si se ha enviado.
+     * Si no se envía cuenta no se valida, ya que no es un parámetro imprescindible para operar.
+     * @param string $number Cuenta.
      * @return bool
      * @throws Exception
      */
